@@ -1,3 +1,3 @@
 # mlk_bins
-Personal Records database build with a tkinter interface
+Personal Records database built with a tkinter interface
 
