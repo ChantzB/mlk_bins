@@ -21,6 +21,8 @@ artist_entry = ''
 year_entry = ''
 rec_company_entry =''
 producer_entry = ''
+title_search = ''
+artist_search = ''
 
 def main_screen():
     global screen
@@ -62,17 +64,6 @@ def submit_screen():
     submit.title('Records Log')
     submit.geometry('500x450')
 
-    global title_get
-    global artist_get
-    global year_get
-    global rec_company_get
-    global producer_get
-    global title_entry
-    global artist_entry
-    global year_entry
-    global rec_company_entry
-    global producer_entry
-
     title_get = StringVar()
     artist_get = StringVar()
     year_get = StringVar()
@@ -113,23 +104,39 @@ def search_screen():
     search.title('Search Records')
     search.geometry('500x450')
 
-    query_search = StringVar()
+    global title_search
+    title_search = StringVar()
+    artist_search = StringVar()
 
     Label(search, text="Search your records", width='400', height='3', bg='dark olive green', font=('Courier', 12), fg='white', pady='5px', relief='ridge').pack()
     Label(search, text='').pack()
 
-    search_entry = Entry(search, textvariable = query_search).pack()
+    Label(search, text='Search by title').pack()
+    search_entry = Entry(search, textvariable = title_search).pack()
+    Button(search, text='search', height='1', width='5', command = queryset).pack()
+
+    Label(search, text='Search by artist').pack()
+    search_entry = Entry(search, textvariable = artist_search).pack()
     Button(search, text='search', height='1', width='5').pack()
 
+def queryset():
+    query_search = Toplevel(screen)
+    query_search.title('Search Records')
+    query_search.geometry('500x450')
     #display records
     session = Session()
-    columns = ('Title', 'Artist','Year', 'Record Company', 'Producer', 'Copies')
-    queryset = session.query(Record).all()
-    for record in queryset:
-        grid = Entry(search, text='')
-        grid.grid(row=record, column = columns)
 
+    title = title_search.get()
+
+    queryset = session.query(Record).all()
+    
+    if title != '':
+        queryset = session.query(Record).filter_by(title = title)
+
+    for record in queryset:
+        Label(query_search, text=record.artist).pack()
     session.close()
+
 
 if __name__ == "__main__":
     main_screen()
