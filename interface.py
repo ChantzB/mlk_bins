@@ -3,6 +3,7 @@ from record import Record
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import pandas as pd
 
 base = declarative_base()
 engine = create_engine('sqlite:///records.db', echo=True)
@@ -113,29 +114,35 @@ def search_screen():
 
     Label(search, text='Search by title').pack()
     search_entry = Entry(search, textvariable = title_search).pack()
-    Button(search, text='search', height='1', width='5', command = queryset).pack()
+    Button(search, text='search', height='1', width='5', command = Table).pack()
 
     Label(search, text='Search by artist').pack()
     search_entry = Entry(search, textvariable = artist_search).pack()
     Button(search, text='search', height='1', width='5').pack()
 
-def queryset():
-    query_search = Toplevel(screen)
-    query_search.title('Search Records')
-    query_search.geometry('500x450')
-    #display records
-    session = Session()
+class Table(object):
+    def __init__(self):
+        self.table = Toplevel(screen)
+        self.table.title('Search Records')
+        self.table.geometry('1500x450')
+        session = Session()
+        queryset = session.query(Record).all()
 
-    title = title_search.get()
+        for i in range(len(queryset)):
+            df = pd.Series(vars(queryset[i])).to_frame()
+            df.columns = ['value']
+            value_list = df['value'].tolist()[1:]
+            total_rows = len(value_list)
 
-    queryset = session.query(Record).all()
-    
-    if title != '':
-        queryset = session.query(Record).filter_by(title = title)
-
-    for record in queryset:
-        Label(query_search, text=record.artist).pack()
-    session.close()
+            for j in range(len(value_list)): 
+                self.e = Entry(self.table, width=20, fg='blue', 
+                               font=('Arial',16,'bold')) 
+                  
+                self.e.grid(row=i, column=j)
+                try:
+                    self.e.insert(END, value_list[j])
+                except:
+                    self.e.insert(END, "NONE")
 
 
 if __name__ == "__main__":
