@@ -90,46 +90,6 @@ class Submit_Screen(object):
 
             Label(submit, text='Record Added', fg='red').pack()
         self.submit = Button(self.screen, text='Submit', height='1', width='5', command = submit_record).pack()
-# def submit_screen():
-#     global submit
-#     submit = Toplevel(screen)
-#     submit.title('Records Log')
-#     submit.geometry('500x450')
-
-#     title_get = StringVar()
-#     artist_get = StringVar()
-#     year_get = StringVar()
-#     rec_company_get = StringVar()
-#     producer_get = StringVar()
-
-#     Label(submit, text="Store you records", width='400', height='3', bg='dark olive green', font=('Courier', 12), fg='white', pady='5px', relief='ridge').pack()
-#     Label(submit, text='').pack()
-
-#     Label(submit, text='Title:').pack()
-#     title_entry = Entry(submit, textvariable = title_get)
-#     title_entry.pack()
-#     Label(submit, text='').pack()
-
-#     Label(submit, text='Artist:').pack()
-#     artist_entry = Entry(submit, textvariable = artist_get)
-#     artist_entry.pack()
-#     Label(submit, text='').pack() 
-    
-#     Label(submit, text='Year:').pack()
-#     year_entry = Entry(submit, textvariable = year_get)
-#     year_entry.pack()
-#     Label(submit, text='').pack() 
-    
-#     Label(submit, text='Record Company').pack()
-#     rec_company_entry = Entry(submit, textvariable = rec_company_get)
-#     rec_company_entry.pack()
-#     Label(submit, text='').pack() 
-
-#     Label(submit, text='Producer(s)').pack()
-#     producer_entry = Entry(submit, textvariable = producer_get)
-#     producer_entry.pack()
-#     Label(submit, text='').pack()           
-#     Button(submit, text='Submit', height='1', width='5', command = submit_record).pack()
 
 def search_screen():
     search = Toplevel(screen)
