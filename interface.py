@@ -25,17 +25,16 @@ producer_entry = ''
 title_search = ''
 artist_search = ''
 
-def main_screen():
-    global screen
-    screen = Tk()
-    screen.geometry('500x450')
-    Label(text="").pack(side=LEFT)
-    Label(text="Welcome to your personal records database", width='400', height='3', bg='dark olive green', font=('Courier', 12), fg='white', pady='5px', relief='ridge').pack()
-    Label(text="").pack()   
-    submit_button = Button(text='Add a Record', activebackground='grey', height='8', width='50', pady='2px', relief='groove', command = submit_screen).pack()
-    Label(text="").pack()
-    search_button = Button(text='Search Records', activebackground='grey', height='8', width='50', relief='groove', command = search_screen).pack()
-    screen.mainloop()
+class Main_Screen(object):
+    def __init__(self):
+        self.screen = Tk()
+        self.screen.geometry('500x450')
+        self.space = Label(text="").pack()
+        self.title = Label(text="Welcome to your personal records database", width='400', height='3', bg='dark olive green', font=('Courier', 12), fg='white', relief='ridge').pack()
+        
+        self.add = Button(text='Add a Record', activebackground='grey', height='8', width='50', relief='groove', command = submit_screen).pack()
+        self.search = Button(text='Search Records', activebackground='grey', height='8', width='50', relief='groove', command = search_screen).pack()
+        self.screen.mainloop()
 
 def submit_record():
     title = title_get.get()
@@ -144,6 +143,5 @@ class Table(object):
                 except:
                     self.e.insert(END, "NONE")
 
-
 if __name__ == "__main__":
-    main_screen()
+    Main_Screen()
