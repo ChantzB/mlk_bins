@@ -68,12 +68,12 @@ class Submit_Screen(object):
         self.producer_entry = Entry(self.screen, textvariable = self.producer_var)
         self.producer_entry.pack()
 
-        def submit_record(self):
-            title = title_get.get()
-            artist = artist_get.get()
-            year = year_get.get()
-            rec_company = rec_company_get.get()
-            producer = producer_get.get()
+        def submit_record():
+            title = self.producer_var.get()
+            artist = self.artist_var.get()
+            year = self.year_var.get()
+            rec_company = self.rec_company_var.get()
+            producer = self.producer_var.get()
                 
             session = Session()
             queryset = session.query(Record).all()
@@ -82,13 +82,13 @@ class Submit_Screen(object):
             session.commit()
             session.close()
 
-            title_entry.delete(0, END)
-            artist_entry.delete(0, END)
-            year_entry.delete(0, END)
-            rec_company_entry.delete(0, END)
-            producer_entry.delete(0,END)
+            self.title_entry.delete(0, END)
+            self.artist_entry.delete(0, END)
+            self.year_entry.delete(0, END)
+            self.rec_company_entry.delete(0, END)
+            self.producer_entry.delete(0,END)
 
-            Label(submit, text='Record Added', fg='red').pack()
+            Label(self.screen, text='Record Added', fg='red').pack()
         self.submit = Button(self.screen, text='Submit', height='1', width='5', command = submit_record).pack()
 
 def search_screen():
