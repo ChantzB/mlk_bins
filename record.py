@@ -4,9 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 base = declarative_base()
-engine = create_engine('sqlite:///catalog.db', echo=True)
-base.metadata.create_all(bind=engine)
-Session = sessionmaker(bind=engine)
+# Session = sessionmaker(bind=engine)
 base_copy = 1
 
 class Record(base):
@@ -30,3 +28,6 @@ class Record(base):
 
     def add_copy(self):
         self.copy = self.copy + 1
+
+engine = create_engine('sqlite:///catalog.db', echo=True)
+base.metadata.create_all(bind=engine)
