@@ -135,5 +135,3 @@ class Table:
                 except:
                     self.e.insert(END, "NONE")
 
-if __name__ == "__main__":
-    Main_Screen()
