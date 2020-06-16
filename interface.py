@@ -6,26 +6,13 @@ from sqlalchemy.orm import sessionmaker
 import pandas as pd
 
 base = declarative_base()
-engine = create_engine('sqlite:///records.db', echo=True)
+engine = create_engine('sqlite:///catalog.db', echo=True)
 base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 
-submit = None
 screen = None
-title_get = ''
-artist_get = ''
-year_get = ''
-rec_company_get = ''
-producer_get = ''
-title_entry = ''
-artist_entry = ''
-year_entry = ''
-rec_company_entry =''
-producer_entry = ''
-title_search = ''
-artist_search = ''
 
-class Main_Screen(object):
+class Main_Screen:
     def __init__(self):
         self.screen = Tk()
         self.screen.geometry('500x450')
@@ -33,10 +20,10 @@ class Main_Screen(object):
         self.title = Label(text="Welcome to your personal records database", width='400', height='3', bg='dark olive green', font=('Courier', 12), fg='white', relief='ridge').pack()
         
         self.add = Button(text='Add a Record', activebackground='grey', height='8', width='50', relief='groove', command = Submit_Screen).pack()
-        self.search = Button(text='Search Records', activebackground='grey', height='8', width='50', relief='groove', command = search_screen).pack()
+        self.search = Button(text='Search Records', activebackground='grey', height='8', width='50', relief='groove', command = Search_Screen).pack()
         self.screen.mainloop()
 
-class Submit_Screen(object):
+class Submit_Screen:
     def __init__(self):
         self.screen = Toplevel(screen)
         self.screen.geometry('500x450')
@@ -69,7 +56,7 @@ class Submit_Screen(object):
         self.producer_entry.pack()
 
         def submit_record():
-            title = self.producer_var.get()
+            title = self.title_var.get()
             artist = self.artist_var.get()
             year = self.year_var.get()
             rec_company = self.rec_company_var.get()
@@ -77,7 +64,7 @@ class Submit_Screen(object):
                 
             session = Session()
             queryset = session.query(Record).all()
-            record = Record(title, artist, year, rec_company, producer, None)
+            record = Record(title.lower(), artist.lower(), year.lower(), rec_company.lower(), producer.lower(), None)
             session.add(record)
             session.commit()
             session.close()
@@ -91,36 +78,49 @@ class Submit_Screen(object):
             Label(self.screen, text='Record Added', fg='red').pack()
         self.submit = Button(self.screen, text='Submit', height='1', width='5', command = submit_record).pack()
 
-def search_screen():
-    search = Toplevel(screen)
-    search.title('Search Records')
-    search.geometry('500x450')
-
-    global title_search
-    title_search = StringVar()
-    artist_search = StringVar()
-
-    Label(search, text="Search your records", width='400', height='3', bg='dark olive green', font=('Courier', 12), fg='white', pady='5px', relief='ridge').pack()
-    Label(search, text='').pack()
-
-    Label(search, text='Search by title').pack()
-    search_entry = Entry(search, textvariable = title_search).pack()
-    Button(search, text='search', height='1', width='5', command = Table).pack()
-
-    Label(search, text='Search by artist').pack()
-    search_entry = Entry(search, textvariable = artist_search).pack()
-    Button(search, text='search', height='1', width='5').pack()
-
-class Table(object):
+class Search_Screen:
     def __init__(self):
+        self.screen = Toplevel(screen)
+        self.screen.geometry('500x450')
+
+        self.title = Label(self.screen, text="Search your records", width='400', height='3', bg='dark olive green', font=('Courier', 12), fg='white', pady='5px', relief='ridge').pack()
+
+        self.title_var = StringVar()
+        self.title = Label(self.screen, text='Search by title').pack()
+        self.title_entry = Entry(self.screen, textvariable = self.title_var).pack()
+        # self.t_button = Button(self.screen, text='search', height='1', width='5', command = get_query).pack()
+
+        self.artist_var = StringVar()
+        self.artist = Label(self.screen, text='Search by artist').pack()
+        self.artist_entry = Entry(self.screen, textvariable = self.artist_var).pack()
+
+        def get_query():
+            title_search = self.title_var.get()
+            artist_search = self.artist_var.get()
+
+            session = Session()
+            if title_search != '':
+                self.queryset = session.query(Record).filter_by(title = title_search.lower()).all()
+            elif artist_search != '':
+                self.queryset = session.query(Record).filter_by(artist = artist_search.lower()).all()
+            else:
+                self.queryset = session.query(Record).all()
+            print(self.queryset)
+            Table(queryset=self.queryset)
+            session.commit()
+            session.close()
+        self.a_button = Button(self.screen, text='search', height='1', width='5', command = get_query).pack()
+class Table:
+    def __init__(self, queryset):
+        query = queryset
         self.table = Toplevel(screen)
         self.table.title('Search Records')
         self.table.geometry('1500x450')
+        #begin session
         session = Session()
-        queryset = session.query(Record).all()
 
-        for i in range(len(queryset)):
-            df = pd.Series(vars(queryset[i])).to_frame()
+        for i in range(len(query)):
+            df = pd.Series(vars(query[i])).to_frame()
             df.columns = ['value']
             value_list = df['value'].tolist()[1:]
             total_rows = len(value_list)
